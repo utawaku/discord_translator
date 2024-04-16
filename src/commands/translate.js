@@ -59,9 +59,7 @@ export default {
   cooldown: 5,
   command: new SlashCommandBuilder()
     .setName("translate")
-    .setDescription(
-      "Replies with translated text (https://cloud.google.com/translate/docs/languages)"
-    )
+    .setDescription("Replies with translated text (https://cloud.google.com/translate/docs/languages)")
     .addStringOption((option) => {
       return option
         .setName("to")
@@ -88,12 +86,16 @@ export default {
 
     const result = await translateText(text, from, to);
 
-    if (result.ok) {
-      await interaction.editReply(`from: **${from}**, to: **${to}**, text: \`${text}\``);
-      await interaction.followUp(result.data);
-    } else {
-      await interaction.editReply("Failed to translate text", { ephemeral: true });
-      await interaction.followUp(result.error);
+    try {
+      if (result.ok) {
+        await interaction.editReply(`from: **${from}**, to: **${to}**, text: \`${text}\``);
+        await interaction.followUp(result.data);
+      } else {
+        await interaction.editReply("Failed to translate text", { ephemeral: true });
+        await interaction.followUp(result.error);
+      }
+    } catch (error) {
+      console.error(error);
     }
   },
   async autocomplete(interaction) {
@@ -108,6 +110,11 @@ export default {
         };
       });
 
-    await interaction.respond(filtered.slice(0, 25));
+    try {
+      await interaction.respond(filtered.slice(0, 25));
+    } catch (error) {
+      console.error(error);
+      await interaction.respond({ content: "Failed to autocomplete", ephemeral: true });
+    }
   },
 };
