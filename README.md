@@ -11,7 +11,7 @@
 clone this project using git
 
 ```sh
-git clone https://github.com/pekochan069/discord_translator.git
+git clone https://github.com/utawaku/discord_translator.git
 cd discord_translator
 ```
 
